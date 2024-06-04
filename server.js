@@ -16,19 +16,26 @@ app.get('/', (req, res) => {
 app.post('/post-to-mastodon', async (req, res) => {
     const status = req.body.status;
 
-    const response = await fetch(MASTODON_API_URL, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${ACCESS_TOKEN}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ status: status })
-    });
+    try {
+        const response = await fetch(MASTODON_API_URL, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${ACCESS_TOKEN}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: status })
+        });
 
-    if (response.ok) {
-        res.status(200).send('Post successful');
-    } else {
-        res.status(response.status).send('Failed to post');
+        if (response.ok) {
+            res.status(200).send('Post successful');
+        } else {
+            const errorText = await response.text();
+            console.error('Failed to post:', errorText);
+            res.status(response.status).send(`Failed to post: ${errorText}`);
+        }
+    } catch (error) {
+        console.error('Error posting to Mastodon:', error);
+        res.status(500).send('Error posting to Mastodon');
     }
 });
 
