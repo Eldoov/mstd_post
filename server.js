@@ -8,7 +8,6 @@ const MASTODON_API_URL = 'https://mastodon.social/api/v1/statuses';
 const ACCESS_TOKEN = process.env.ACCESS_TOKEN; // 使用环境变量获取访问令牌
 
 // 使用 CORS 中间件
-app.use(cors());
 app.use(express.json());
 
 // 添加处理根路径请求的 GET 路由
