@@ -1,20 +1,24 @@
 const express = require('express');
 const fetch = require('node-fetch');
+const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 
 const MASTODON_API_URL = 'https://mastodon.social/api/v1/statuses';
 const ACCESS_TOKEN = process.env.ACCESS_TOKEN; // 使用环境变量获取访问令牌
 
+// 使用 CORS 中间件
+app.use(cors());
 app.use(express.json());
 
-// 添加处理根路径请求的GET路由
+// 添加处理根路径请求的 GET 路由
 app.get('/', (req, res) => {
     res.send('Welcome to the Mastodon Post App!');
 });
 
 app.post('/post-to-mastodon', async (req, res) => {
     const status = req.body.status;
+    console.log('Received status:', status);
 
     try {
         const response = await fetch(MASTODON_API_URL, {
@@ -27,6 +31,7 @@ app.post('/post-to-mastodon', async (req, res) => {
         });
 
         if (response.ok) {
+            console.log('Post successful');
             res.status(200).send('Post successful');
         } else {
             const errorText = await response.text();
