@@ -3,32 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mastodon Post</title>
+    <title>Post to Mastodon</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #postContent {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
     <h1>Post to Mastodon</h1>
-    <textarea id="postContent" placeholder="What's on your mind?" rows="4" cols="50"></textarea><br>
+    <textarea id="postContent" placeholder="What's on your mind?"></textarea><br>
     <button onclick="postToMastodon()">Post</button>
 
     <script>
-	    async function postToMastodon() {
-	        const content = document.getElementById('postContent').value;
+        async function postToMastodon() {
+            const content = document.getElementById('postContent').value;
 
-	        const response = await fetch('https://mstd-post.onrender.com', {
-	            method: 'POST',
-	            headers: {
-	                'Content-Type': 'application/json'
-	            },
-	            body: JSON.stringify({ status: content })
-	        });
+            if (!content) {
+                alert('Please enter some content to post.');
+                return;
+            }
 
-	        if (response.ok) {
-	            alert('Post successful!');
-	        } else {
-	            alert('Failed to post.');
-	        }
-	    }
-	</script>
+            try {
+                const response = await fetch('https://mstd-post.onrender.com', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status: content })
+                });
 
+                if (response.ok) {
+                    alert('Post successful!');
+                    document.getElementById('postContent').value = '';  // 清空输入框
+                } else {
+                    alert('Failed to post. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            }
+        }
+    </script>
 </body>
 </html>
