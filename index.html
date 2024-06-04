@@ -49,14 +49,18 @@
                     body: JSON.stringify({ status: content })
                 });
 
+                console.log('Response status:', response.status); // 添加日志记录
+
                 if (response.ok) {
                     alert('Post successful!');
                     document.getElementById('postContent').value = '';  // 清空输入框
                 } else {
-                    alert('Failed to post. Please try again.');
+                    const errorText = await response.text();
+                    console.error('Failed to post. Error:', errorText); // 添加日志记录
+                    alert('Failed to post. Error: ' + errorText);
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error:', error); // 添加日志记录
                 alert('An error occurred. Please try again.');
             }
         }
