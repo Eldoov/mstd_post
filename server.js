@@ -4,9 +4,14 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 const MASTODON_API_URL = 'https://mastodon.social/api/v1/statuses';
-const ACCESS_TOKEN = 'RcOn3COmNK56tUXakanY1WSUo-AgagUdOKeSQqQEhRU'; // 替换为你的Mastodon API访问令牌
+const ACCESS_TOKEN = process.env.ACCESS_TOKEN; // 使用环境变量获取访问令牌
 
 app.use(express.json());
+
+// 添加处理根路径请求的GET路由
+app.get('/', (req, res) => {
+    res.send('Welcome to the Mastodon Post App!');
+});
 
 app.post('/post-to-mastodon', async (req, res) => {
     const status = req.body.status;
